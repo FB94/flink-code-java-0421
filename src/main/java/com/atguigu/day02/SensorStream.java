@@ -14,6 +14,7 @@ public class SensorStream {
         stream.print();
         env.execute();
 
+
     }
 }
 
