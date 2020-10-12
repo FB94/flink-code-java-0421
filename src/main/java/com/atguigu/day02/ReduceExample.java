@@ -34,6 +34,8 @@ public class ReduceExample {
                     }
                 })
                 .print();
+
         env.execute();
+
     }
 }

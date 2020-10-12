@@ -23,16 +23,16 @@ public class FlatMapExample {
                             collector.collect(s);
                         }
                     }
-                })
-        .print();
+                });
+        //.print();
 
         stream
                 .flatMap(new MyFlatMap())
                 .print();
-
         env.execute();
     }
-    public static class MyFlatMap implements FlatMapFunction<String,String>{
+
+    public static class MyFlatMap implements FlatMapFunction<String, String> {
         @Override
         public void flatMap(String s, Collector<String> collector) throws Exception {
             if (s.equals("white")) {
@@ -43,4 +43,5 @@ public class FlatMapExample {
             }
         }
     }
+
 }

@@ -12,7 +12,7 @@ public class ReduceWordCount {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
 
-        DataStreamSource<String> stream = env.fromElements("hello world", "hello world world");
+        DataStreamSource<String> stream = env.fromElements("hello world", "hello world hello world");
 
         stream
                 .flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
@@ -32,6 +32,7 @@ public class ReduceWordCount {
                     }
                 })
                 .print();
+
         env.execute();
 
     }

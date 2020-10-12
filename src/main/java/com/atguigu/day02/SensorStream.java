@@ -11,10 +11,9 @@ public class SensorStream {
         env.setParallelism(1);
 
         DataStreamSource<SensorReading> stream = env.addSource(new SensorSource());
+
         stream.print();
+
         env.execute();
-
-
     }
 }
-

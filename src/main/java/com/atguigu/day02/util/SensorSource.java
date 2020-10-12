@@ -13,24 +13,27 @@ public class SensorSource extends RichParallelSourceFunction<SensorReading> {
     public void run(SourceContext<SensorReading> sourceContext) throws Exception {
         Random rand = new Random();
 
-        String[] sendorIds = new String[10];
+        String[] sensorlds = new String[10];
         double[] curFTemp = new double[10];
-        for(int i = 0; i<10; i++){
-            sendorIds[i] = "sensor_" + (i+1);
+
+        for (int i = 0; i < 10; i++) {
+            sensorlds[i] = "sensor_" + (i + 1);
             curFTemp[i] = 65 + (rand.nextGaussian() * 20);
         }
-        while (running){
+        while (running) {
             long curTime = Calendar.getInstance().getTimeInMillis();
-            for(int i=0;i<10;i++){
+            for (int i = 0; i < 10; i++) {
                 curFTemp[i] += rand.nextGaussian() * 0.5;
-                sourceContext.collect(new SensorReading(sendorIds[i],curTime,curFTemp[i]));
+                sourceContext.collect(new SensorReading(sensorlds[i], curTime, curFTemp[i]));
             }
             Thread.sleep(100);
         }
+
     }
 
     @Override
     public void cancel() {
         this.running = false;
+
     }
 }

@@ -14,8 +14,8 @@ public class MapExample {
         DataStreamSource<SensorReading> stream = env.addSource(new SensorSource());
 
         stream
-                .map(r -> r.id)
-                .print();
+                .map(r -> r.id);
+        //.print();
 
         stream
                 .map(new MapFunction<SensorReading, String>() {
@@ -23,21 +23,21 @@ public class MapExample {
                     public String map(SensorReading sensorReading) throws Exception {
                         return sensorReading.id;
                     }
-                })
-                .print();
+                });
+        //.print();
 
         stream
-                .map(new ldExtractor())
+                .map(new IdExtractor())
                 .print();
+
         env.execute();
     }
 
-    public static class ldExtractor implements MapFunction<SensorReading, String> {
-
+    public static class IdExtractor implements MapFunction<SensorReading, String> {
         @Override
         public String map(SensorReading sensorReading) throws Exception {
             return sensorReading.id;
         }
     }
-}
 
+}
