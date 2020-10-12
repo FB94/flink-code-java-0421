@@ -32,12 +32,12 @@ public class WriteToMysql {
         public void open(Configuration parameters) throws Exception {
             super.open(parameters);
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://hadoop105:3306/sensor",
+                    "jdbc:mysql://hadoop105:3306/sensor?useUnicode=true&characterEncoding=utf-8&useSSL=false",
                     "root",
                     "root"
             );
 
-            insertStmt = conn.prepareStatement("INSERT INTO temps (id, temp) VALUES(?,?)");
+            insertStmt = conn.prepareStatement("INSERT INTO temps (id, temp) VALUES (?, ?)");
             updateStmt = conn.prepareStatement("UPDATE temps SET temp = ? WHERE id = ?");
         }
 
