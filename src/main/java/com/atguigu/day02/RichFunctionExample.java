@@ -14,6 +14,7 @@ public class RichFunctionExample {
 
         stream
                 .map(new RichMapFunction<Integer, Integer>() {
+
                     @Override
                     public void open(Configuration parameters) throws Exception {
                         super.open(parameters);
@@ -32,7 +33,7 @@ public class RichFunctionExample {
                     }
                 })
                 .print();
+
         env.execute();
     }
-
 }

@@ -9,24 +9,22 @@ import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.time.Time;
 
-
 public class AvgTempPerWindow {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
-
         DataStreamSource<SensorReading> stream = env.addSource(new SensorSource());
-
         stream
                 .keyBy(r -> r.id)
                 .timeWindow(Time.seconds(5))
                 .aggregate(new AvgAgg())
                 .print();
+
         env.execute();
     }
 
+    //Tuple3<id，温度，个数>
     public static class AvgAgg implements AggregateFunction<SensorReading, Tuple3<String, Double, Long>, Tuple2<String, Double>> {
-
         @Override
         public Tuple3<String, Double, Long> createAccumulator() {
             return Tuple3.of("", 0.0, 0L);
@@ -34,7 +32,7 @@ public class AvgTempPerWindow {
 
         @Override
         public Tuple3<String, Double, Long> add(SensorReading r, Tuple3<String, Double, Long> acc) {
-            return Tuple3.of(r.id, acc.f1 + r.temperature, acc.f2 + 1L);
+            return Tuple3.of(r.id, r.temperature + acc.f1, acc.f2 + 1L);
         }
 
         @Override
@@ -47,5 +45,4 @@ public class AvgTempPerWindow {
             return null;
         }
     }
-
 }

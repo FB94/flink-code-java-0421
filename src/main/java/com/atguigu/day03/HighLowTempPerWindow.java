@@ -16,9 +16,7 @@ public class HighLowTempPerWindow {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
-
         DataStreamSource<SensorReading> stream = env.addSource(new SensorSource());
-
         stream
                 .keyBy(r -> r.id)
                 .timeWindow(Time.seconds(5))
@@ -29,16 +27,15 @@ public class HighLowTempPerWindow {
     }
 
     public static class WindowResult extends ProcessWindowFunction<Tuple3<String, Double, Double>, HighLowTemp, String, TimeWindow> {
-
         @Override
-        public void process(String key, Context context, Iterable<Tuple3<String, Double, Double>> iterable, Collector<HighLowTemp> collector) throws Exception {
+        public void process(String key, Context ctx, Iterable<Tuple3<String, Double, Double>> iterable, Collector<HighLowTemp> collector) throws Exception {
             Tuple3<String, Double, Double> iter = iterable.iterator().next();
-            collector.collect(new HighLowTemp(key, iter.f1, iter.f2, context.window().getStart(), context.window().getEnd()));
+            collector.collect(new HighLowTemp(key, iter.f1, iter.f2, ctx.window().getStart(), ctx.window().getEnd()));
         }
     }
 
-    public static class Agg implements AggregateFunction<SensorReading, Tuple3<String, Double, Double>, Tuple3<String, Double, Double>> {
 
+    public static class Agg implements AggregateFunction<SensorReading, Tuple3<String, Double, Double>, Tuple3<String, Double, Double>> {
         @Override
         public Tuple3<String, Double, Double> createAccumulator() {
             return Tuple3.of("", Double.MAX_VALUE, Double.MIN_VALUE);
@@ -46,7 +43,7 @@ public class HighLowTempPerWindow {
 
         @Override
         public Tuple3<String, Double, Double> add(SensorReading r, Tuple3<String, Double, Double> agg) {
-            return Tuple3.of(r.id, Math.min(r.temperature, agg.f1), Math.max(r.temperature, agg.f2));
+            return Tuple3.of(r.id, Math.max(r.temperature, agg.f2), Math.min(r.temperature, agg.f1));
         }
 
         @Override
@@ -59,4 +56,6 @@ public class HighLowTempPerWindow {
             return null;
         }
     }
+
+
 }

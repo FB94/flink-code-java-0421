@@ -12,21 +12,15 @@ public class AggregateFunctionExample {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
-
         DataStreamSource<SensorReading> stream = env.addSource(new SensorSource());
 
-        //分流 => 开窗 => 聚合
         stream
                 .keyBy(r -> r.id)
                 .timeWindow(Time.seconds(5))
                 .aggregate(new MinAgg())
                 .print();
 
-
-        env.execute()
-        ;
-
-
+        env.execute();
     }
 
     public static class MinAgg implements AggregateFunction<SensorReading, Tuple2<String, Double>, Tuple2<String, Double>> {
@@ -49,12 +43,12 @@ public class AggregateFunctionExample {
             return acc;
         }
 
-
-        //merge函数在什么时候需要实现？
-        //两个条件：1.事件时间 2.会话窗口
+        //merge 函数什么时候需要实现？
+        //两个条件：1.事件事件 2.会话时间
         @Override
-        public Tuple2<String, Double> merge(Tuple2<String, Double> stringDoubleTuple2, Tuple2<String, Double> acc1) {
+        public Tuple2<String, Double> merge(Tuple2<String, Double> acc1, Tuple2<String, Double> acc2) {
             return null;
         }
     }
+
 }

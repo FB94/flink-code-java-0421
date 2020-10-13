@@ -5,8 +5,7 @@ import java.sql.Timestamp;
 public class HighLowTemp {
     public String id;
     public Double high, low;
-    public Long windowStart, windowEnd;
-
+    public Long windowStart,windowEnd;
 
     public HighLowTemp() {
     }
@@ -30,3 +29,4 @@ public class HighLowTemp {
                 '}';
     }
 }
+
