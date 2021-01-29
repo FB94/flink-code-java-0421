@@ -9,10 +9,12 @@ import org.apache.flink.util.Collector;
 
 public class WordCountCromSocket {
     public static void main(String[] args) throws Exception {
+
+        //创建执行环境
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
 
-        DataStream<String> stream = env.socketTextStream("hadoop105", 9999);
+        DataStream<String> stream = env.socketTextStream("localhost", 9999);
 
         SingleOutputStreamOperator<Tuple2<String, Integer>> result = stream
                 .flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
